@@ -1,10 +1,10 @@
 {
   "version": "1.0",
-  "defaultProvider": "unpkg",
+  "defaultProvider": "cdnjs",
   "libraries": [
     {
-      "library": "twitter-bootstrap@2.1.1",
-      "destination": "lib/twitter-bootstrap/"
+      "library": "twitter-bootstrap@4.5.3",
+      "destination": "wwwroot/lib/bootstrap/"
     }
   ]
 }

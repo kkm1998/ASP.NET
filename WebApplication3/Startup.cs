@@ -22,7 +22,7 @@ namespace WebApplication3
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddRazorPages();
             services.AddDbContext<AppDbContext>(options =>options.UseSqlServer(Configuration["Data:SportStoreProducts:ConnectionString"]));
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
@@ -33,16 +33,17 @@ namespace WebApplication3
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
             app.UseDeveloperExceptionPage(); // informacje szczegó³owe o b³êdach
             app.UseStatusCodePages(); // Wyœwietla strony ze statusem b³êdu
             app.UseStaticFiles(); // obs³uga treœci statycznych css, images, js
             app.UseElapsedTimeMiddleware();
-            //app.UseAuthentication();
+            app.UseAuthentication();
             app.UseRouting();
+            app.UseAuthorization();
             app.UseEndpoints(routes =>
             {
 
