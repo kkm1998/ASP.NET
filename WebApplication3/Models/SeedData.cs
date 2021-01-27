@@ -81,6 +81,7 @@ namespace WebApplication3.Models
                         Category = "Szachy",
                         Price = 1200
                     }
+
                 );
                 context.SaveChanges();
             }

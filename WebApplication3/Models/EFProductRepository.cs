@@ -7,7 +7,10 @@ namespace WebApplication3.Models
 {
     public class EFProductRepository : IProductRepository
     {
-        private readonly AppDbContext ctx;
+        private readonly AppDbContext ctx; /// <summary>
+        /// Databasecontext
+        /// </summary>
+        /// <param name="ctx"></param>
         public EFProductRepository(AppDbContext ctx)
         {
             this.ctx = ctx;
@@ -35,7 +38,7 @@ namespace WebApplication3.Models
             ctx.SaveChanges();
         }
         public Product DeleteProduct(int ID)
-        {   
+        {
                 Product dbEntry = ctx.Products
                     .FirstOrDefault(p => p.ID == ID);
                 if (dbEntry != null)

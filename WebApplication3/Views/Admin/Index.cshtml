@@ -14,23 +14,31 @@
     </tr>
     @foreach(var item in Model)
     {
-        <tr>
-            <td class="text-right">@item.ID</td>
-            <td>@item.Name</td>
-            <td class="text-right">@item.Price.ToString("c")</td>
-            <td class="text-center">
-                <form asp-action="Delete" method="post">
-                    <a asp-action="Edit" class="btn btn-sm btn-warning"
-                       asp-route-productId="@item.ID">
-                        Edytuj
-                    </a>
-                    <input type="hidden" name="ID" value="@item.ID"/>
-                    <button type="submit" class="btn btn-danger btn-sm">
-                        Usuń
-                    </button>
-                </form>
-            </td>
-        </tr>
+<tr>
+    <td class="text-right">@item.ID</td>
+    <td>@item.Name</td>
+    <td class="text-right">@item.Price.ToString("c")</td>
+    <td class="text-center">
+        @*<form asp-action="Delete" method="post">
+                <a asp-action="Edit" class="btn btn-sm btn-warning"
+                   asp-route-productId="@item.ID">
+                    Edytuj
+                </a>
+                <input type="hidden" name="ID" value="@item.ID"/>
+                <button type="submit" class="btn btn-danger btn-sm">
+                  Usuń
+                </button>
+            </form>*@
+        <a asp-controller="Admin" asp-action="Edit" asp-route-productID="@item.ID">
+            <button type="button" class="btn btn-primary">Edit</button>
+        </a>
+    </td>
+    <td>
+        <form asp-controller="Admin" asp-action="Delete" asp-route-productID="@item.ID">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </td>
+</tr>
     }
 </table>
 <div class="text-center">

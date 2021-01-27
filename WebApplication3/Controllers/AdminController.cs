@@ -43,7 +43,8 @@ namespace WebApplication3.Controllers
             {
                 TempData["message"] = $"Usunięto {deleteProduct.Name}";
             }
-            return RedirectToAction("Index");
+            //return RedirectToAction("Index");
+            return View("Index", repository.Products);
         }
     }
 }
