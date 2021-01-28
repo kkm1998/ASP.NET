@@ -10,56 +10,84 @@ namespace WebApplication3.Controllers
     [Route("api/[controller]")]
     public class ApiController : Controller
     {
-        private readonly IProductRepository repository;
+        private readonly IProductRepository repo;
 
-        public ApiController(IProductRepository repository)
+        public ApiController(IProductRepository repo)
         {
-            this.repository = repository;
+            this.repo = repo;
         }
+
+        //[HttpGet("GetAll")]
+        //public ActionResult<IEnumerable<Product>> List(string category)
+        //{
+        //    return Ok(repository.Products.Where(p => p.Category == category));
+        //}
         /// <summary>
         /// Get all products
         /// </summary>
         /// <param name="category">category name</param>
         /// <returns>Products list</returns>
         [HttpGet("GetAll")]
-        public ActionResult<IEnumerable<Product>> List(string category)
+        public ActionResult<List<Product>> List()
         {
-            return Ok(repository.Products.Where(p => p.Category == category));
+            return Ok(repo.Products.AsEnumerable().ToList());
         }
-        [HttpGet("GetById")]
-        public ActionResult<Product> GetById(int id)
+        /// <summary>
+        /// Delete product
+        /// </summary>
+        /// <param name="ID">ProductID</param>
+        /// <returns>Nothing</returns>
+        [HttpDelete("{ID}")]
+        public ActionResult DeleteProduct(int ID)
         {
-            var product = repository.Products.SingleOrDefault(p => p.ID == id);
+            repo.DeleteProduct(ID);
+            return NoContent();
+        }
+        /// <summary>
+        /// Get product by ID
+        /// </summary>
+        /// <param name="ID">ProductID</param>
+        /// <returns>Product</returns>
+        [HttpGet("GetById {ID}")]
+        public ActionResult<Product> GetById(int ID)
+        {
+            var product = repo.Products.SingleOrDefault(x => x.ID == ID);
             if (product == null)
+            {
                 return NotFound();
+            }
             return Ok(product);
         }
+        /// <summary>
+        /// Adds a product
+        /// </summary>
+        /// <param name="product">product</param>
+        /// <returns>Product</returns>
         [HttpPost]
         public ActionResult<Product> AddProduct(Product product)
         {
-            repository.SaveProduct(product);
+            repo.SaveProduct(product);
             CreatedAtAction(nameof(GetById), new { id = product.ID }, product);
             return Ok(product);
         }
-
-        [HttpDelete]
-        public ActionResult DeleteProduct(int productId)
-        {
-            repository.DeleteProduct(productId);
-            return NoContent();
-        }
-        [HttpPut]
+        /// <summary>
+        /// Updates a product
+        /// </summary>
+        /// <param name="product">product</param>
+        /// <returns>Product</returns>
+        [HttpPut("{ID}")]
         public ActionResult UpdateProduct(Product product)
         {
             if (!ModelState.IsValid)
+            {
                 return BadRequest();
-
-            if (!repository.Products.Any(p => p.ID == product.ID))
+            }
+            if (!repo.Products.Any(x => x.ID == product.ID))
+            {
                 return NotFound();
-
-            repository.SaveProduct(product);
-
-            return NoContent();
+            }
+            repo.SaveProduct(product);
+            return AcceptedAtAction(nameof(GetById), new { id = product.ID }, product);
         }
 
     }

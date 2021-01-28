@@ -1,0 +1,19 @@
+﻿@page "/kalkulator"
+
+<h1>Kalkulator</h1>
+
+<input type="text" @bind="a" />
+<input type="text" @bind="b" />
+
+<button class="btn btn-primary" @onclick="Sum">Click me</button>
+<p>Wynik: </p>@currentCount
+@code {
+    private int currentCount = 0;
+    private string a = "";
+    private string b = "";
+
+    private void Sum()
+    {
+        currentCount = int.Parse(a) + int.Parse(b);
+    }
+}

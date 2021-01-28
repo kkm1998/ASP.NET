@@ -7,47 +7,43 @@ namespace WebApplication3.Models
 {
     public class EFProductRepository : IProductRepository
     {
-        private readonly AppDbContext ctx; /// <summary>
+        private readonly AppDbContext context; /// <summary>
         /// Databasecontext
         /// </summary>
         /// <param name="ctx"></param>
         public EFProductRepository(AppDbContext ctx)
         {
-            this.ctx = ctx;
+            this.context = ctx;
         }
-        public IQueryable<Product> Products => ctx.Products;
+        public IQueryable<Product> Products => context.Products;
         public void SaveProduct(Product product)
         {
             if (product.ID == 0)
             {
-                ctx.Products.Add(product);
+                context.Products.Add(product);
             }
             else
             {
-                Product dbEntry = ctx.Products
-                    .FirstOrDefault(p => p.ID == product.ID);
-                if (dbEntry != null)
+                Product database = context.Products.First(p => p.ID == product.ID);
+                if (database != null)
                 {
-                    dbEntry.Name = product.Name;
-                    dbEntry.Description = product.Description;
-                    dbEntry.Price = product.Price;                  
-                    dbEntry.Category = product.Category;
-
+                    database.Name = product.Name;
+                    database.Description = product.Description;
+                    database.Price = product.Price;                  
+                    database.Category = product.Category;
                 }
             }
-            ctx.SaveChanges();
+            context.SaveChanges();
         }
         public Product DeleteProduct(int ID)
         {
-                Product dbEntry = ctx.Products
-                    .FirstOrDefault(p => p.ID == ID);
-                if (dbEntry != null)
+                Product product = context.Products.First(p => p.ID == ID);
+                if (product != null)
                 {
-
-                ctx.Products.Remove(dbEntry);
-                ctx.SaveChanges();
+                context.Products.Remove(product);
+                context.SaveChanges();
             }
-            return dbEntry;
+            return product;
        
         }
     }

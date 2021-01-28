@@ -16,22 +16,17 @@ namespace WebApplication3.Controllers
         private UserManager<IdentityUser> userManager;
         private SignInManager<IdentityUser> signInManager;
 
-        public AccountController(UserManager<IdentityUser> userMgr,
-                SignInManager<IdentityUser> signInMgr)
+        public AccountController(UserManager<IdentityUser> userMgr,SignInManager<IdentityUser> signInMgr)
         {
             userManager = userMgr;
             signInManager = signInMgr;
-
             IdentitySeedData.EnsurePopulated(userMgr).Wait();
         }
 
         [AllowAnonymous]
         public ViewResult Login(string returnUrl)
         {
-            return View(new LoginModel
-            {
-                ReturnUrl = returnUrl
-            });
+            return View(new LoginModel { ReturnUrl = returnUrl });
         }
 
         [HttpPost]
@@ -41,19 +36,17 @@ namespace WebApplication3.Controllers
         {
             if (ModelState.IsValid)
             {
-                IdentityUser user =
-                    await userManager.FindByNameAsync(loginModel.Name);
+                IdentityUser user = await userManager.FindByNameAsync(loginModel.Name);
                 if (user != null)
                 {
                     await signInManager.SignOutAsync();
-                    if ((await signInManager.PasswordSignInAsync(user,
-                            loginModel.Password, false, false)).Succeeded)
+                    if ((await signInManager.PasswordSignInAsync(user, loginModel.Password, false, false)).Succeeded)
                     {
                         return Redirect(loginModel?.ReturnUrl ?? "/Admin/Index");
                     }
                 }
             }
-            ModelState.AddModelError("", "Nieprawidłowa nazwa użytkownika lub hasło");
+            ModelState.AddModelError("", "Błąd hasła bądź nazwy");
             return View(loginModel);
         }
 

@@ -13,79 +13,74 @@ namespace WebApplication3.test
     {
 
         [Fact]
-        public void Index_Contains_All_Products()
+        public void TestAllProducts()
         {
-            // Przygotowanie — tworzenie imitacji repozytorium.
+            //Arrange repo
             Mock<IProductRepository> mock = new Mock<IProductRepository>();
             mock.Setup(m => m.Products).Returns(new Product[] {
-                new Product {ID = 1, Name = "P1"},
-                new Product {ID = 2, Name = "P2"},
-                new Product {ID = 3, Name = "P3"},
+                new Product {ID = 1, Name = "Kajak"},
+                new Product {ID = 2, Name = "Namiot"},
+                new Product {ID = 3, Name = "Pi³ka"},
+                new Product {ID = 4, Name = "£ódka"},
+                new Product {ID = 5, Name = "Czapka"},
             }.AsQueryable<Product>());
 
-            // Przygotowanie — utworzenie kontrolera.
+            //Arrange controler
             AdminController controller = new AdminController(mock.Object);
-            // Dzia³anie.
-            Product[] result =
-                GetViewModel<IEnumerable<Product>>(controller.Index())?.ToArray();
+            //Act
+            Product[] outcome = GetViewModel<IEnumerable<Product>>(controller.Index())?.ToArray();
 
-            // Asercje.
-            Assert.Equal(3, result.Length);
-            Assert.Equal("P1", result[0].Name);
-            Assert.Equal("P2", result[1].Name);
-            Assert.Equal("P3", result[2].Name);
+            //Assertion
+            Assert.Equal(5, outcome.Length);
+            Assert.Equal("Kajak", outcome[0].Name);
+            Assert.Equal("Namiot", outcome[1].Name);
+            Assert.Equal("Pi³ka", outcome[2].Name);
+            Assert.Equal("£ódka", outcome[3].Name);
+            Assert.Equal("Czapka", outcome[4].Name);
         }
 
         [Fact]
-        public void Can_Filter_Products()
+        public void TestFilterProduct()
         {
-            // Przygotowanie.
-            // Utworzenie imitacji repozytorium.
             Mock<IProductRepository> mock = new Mock<IProductRepository>();
             mock.Setup(m => m.Products).Returns((new Product[] {
-                new Product {ID = 1, Name = "P1", Category = "Cat1"},
-                new Product {ID = 2, Name = "P2", Category = "Cat2"},
-                new Product {ID = 3, Name = "P3", Category = "Cat1"},
-                new Product {ID = 4, Name = "P4", Category = "Cat2"},
-                new Product {ID = 5, Name = "P5", Category = "Cat3"}
+                new Product {ID = 1, Name = "Kajak", Category = "Sport"},
+                new Product {ID = 2, Name = "Namiot", Category = "Ekwipunek"},
+                new Product {ID = 3, Name = "Pi³ka", Category = "Sport"},
+                new Product {ID = 4, Name = "£ódka", Category = "Sport"},
+                new Product {ID = 5, Name = "Czapka", Category = "Ubiór"}
             }).AsQueryable<Product>());
 
-            // Przygotowanie — utworzenie kontrolera i ustawienie 3-elementowej strony.
             ProductController controller = new ProductController(mock.Object);
 
-            // Dzia³anie.
-            Product[] result = GetViewModel<IEnumerable<Product>>(controller.List("Cat2")).ToArray();
+            Product[] outcome = GetViewModel<IEnumerable<Product>>(controller.List("Sport")).ToArray();
 
-            // Asercje.
-            Assert.Equal(2, result.Length);
-            Assert.True(result[0].Name == "P2" && result[0].Category == "Cat2");
-            Assert.True(result[1].Name == "P4" && result[1].Category == "Cat2");
+
+            Assert.Equal(3, outcome.Length);
+            Assert.True(outcome[0].Name == "Kajak" && outcome[0].Category == "Sport");
+            Assert.True(outcome[1].Name == "Pi³ka" && outcome[1].Category == "Sport");
+            Assert.True(outcome[2].Name == "£ódka" && outcome[2].Category == "Sport");
         }
 
         [Theory]
-        [InlineData(1, "P1")]
-        [InlineData(4, "P4")]
-        public void Can_Get_Products(int id, string expectedName)
+        [InlineData(1, "Kajak")]
+        [InlineData(3, "Pi³ka")]
+        [InlineData(5, "Czapka")]
+        public void TestProductByID(int id, string name)
         {
-            // Przygotowanie.
-            // Utworzenie imitacji repozytorium.
             Mock<IProductRepository> mock = new Mock<IProductRepository>();
             mock.Setup(m => m.Products).Returns((new Product[] {
-                new Product {ID = 1, Name = "P1", Category = "Cat1"},
-                new Product {ID = 2, Name = "P2", Category = "Cat2"},
-                new Product {ID = 3, Name = "P3", Category = "Cat1"},
-                new Product {ID = 4, Name = "P4", Category = "Cat2"},
-                new Product {ID = 5, Name = "P5", Category = "Cat3"}
+                new Product {ID = 1, Name = "Kajak", Category = "Sport"},
+                new Product {ID = 2, Name = "Namiot", Category = "Ekwipunek"},
+                new Product {ID = 3, Name = "Pi³ka", Category = "Sport"},
+                new Product {ID = 4, Name = "£ódka", Category = "Sport"},
+                new Product {ID = 5, Name = "Czapka", Category = "Ubiór"}
             }).AsQueryable<Product>());
-
-            // Przygotowanie — utworzenie kontrolera i ustawienie 3-elementowej strony.
             ProductController controller = new ProductController(mock.Object);
 
-            // Dzia³anie.
-            Product result = GetViewModel<Product>(controller.GetById(id));
+            Product outcome = GetViewModel<Product>(controller.GetById(id));
 
-            // Asercje.
-            Assert.Equal(result.Name, expectedName);
+            Assert.Equal(outcome.Name, name);
         }
 
         private T GetViewModel<T>(IActionResult result) where T : class

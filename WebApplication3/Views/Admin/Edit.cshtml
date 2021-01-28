@@ -5,28 +5,28 @@
 }
 <form asp-action="Save" method="post">
     <input type="hidden" asp-for="ID" />
-    <div class="form-group">
+    <div class="form-group text-center">
         <label asp-for="Name">Produkt</label>
         <div><span asp-validation-for="Name" class="text-danger"></span></div>
         <input asp-for="Name" class="form-control" />
     </div>
-    <div class="form-group">
+    <div class="form-group text-center">
         <label asp-for="Description">Opis</label>
         <div><span asp-validation-for="Description" class="text-danger"></span></div>
         <input asp-for="Description" class="form-control" />
     </div>
-    <div class="form-group">
+    <div class="form-group text-center">
         <label asp-for="Category">Kategoria</label>
         <div><span asp-validation-for="Category" class="text-danger"></span></div>
         <input asp-for="Category" class="form-control" />
     </div>
-    <div class="form-group">
+    <div class="form-group text-center">
         <label asp-for="Price">@Html.LabelFor(x => x.Price)</label>
         <div><span asp-validation-for="Price" class="text-danger"></span></div>
         <input asp-for="Price" class="form-control" />
     </div>
     <div class="text-center">
-        <button class="btn btn-primary" type="submit">Zapisz</button>
-        <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+        <button class="btn btn-outline-success" type="submit">Zapisz</button>
+        <a asp-action="Index" class="btn btn-outline-danger">Anuluj</a>
     </div>
 </form>

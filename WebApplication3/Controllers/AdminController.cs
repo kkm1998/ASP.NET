@@ -11,22 +11,42 @@ namespace WebApplication3.Controllers
     [Authorize]
     public class AdminController : Controller
     {
-        private IProductRepository repository;
+        private IProductRepository repo;
 
         public AdminController(IProductRepository repo)
         {
-            repository = repo;
+            this.repo = repo;
         }
-        public ViewResult Index() => View(repository.Products);
-        public ViewResult Edit(int productID) => View(repository.Products.FirstOrDefault(p => p.ID == productID));
+        public ViewResult Index()
+        {
+            return View(repo.Products);
+        }
+        public ViewResult Create()
+        {
+            return View("Edit", new Product());
+        }
+        [HttpPost]
+        public IActionResult Delete(int productID)
+        {
+            Product product = repo.DeleteProduct(productID);
+            if (product != null)
+            {
+                TempData["message"] = $"Produkt {product.Name} został usunięty";
+            }
+            //return RedirectToAction("Index");
+            return View("Index", repo.Products);
+        }
+        public ViewResult Edit(int productID)
+        {
+            return View(repo.Products.First(x => x.ID == productID));
+        }
         [HttpPost]
         public IActionResult Save(Product product)
         {
             if (ModelState.IsValid)
             {
-               
-                repository.SaveProduct(product);
-                TempData["message"] = $"Zapisano {product.Name}";
+                repo.SaveProduct(product);
+                TempData["message"] = $"Produkt {product.Name} został zapisany";
                 return RedirectToAction("Index");
             }
             else
@@ -34,17 +54,7 @@ namespace WebApplication3.Controllers
                 return View("Edit", product);
             }
         }
-        public ViewResult Create() => View("Edit", new Product());
-        [HttpPost]
-        public IActionResult Delete (int productID)
-        {
-            Product deleteProduct = repository.DeleteProduct(productID);
-            if(deleteProduct != null)
-            {
-                TempData["message"] = $"Usunięto {deleteProduct.Name}";
-            }
-            //return RedirectToAction("Index");
-            return View("Index", repository.Products);
-        }
+
+
     }
 }

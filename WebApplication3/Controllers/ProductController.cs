@@ -9,19 +9,28 @@ namespace WebApplication3.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IProductRepository productRepository;
+        private readonly IProductRepository repo;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductController(IProductRepository repo)
         {
-            this.productRepository = productRepository;
+            this.repo = repo;
         }
-        public ViewResult ListAll() => View(productRepository.Products);
-        public ViewResult GetById(int id) => View(productRepository.Products.Single(p => p.ID == id));
-
-        public ViewResult List(string category) => View(productRepository.Products.Where(p => p.Category == category));
         public IActionResult Index()
         {
             return View();
         }
+        public ViewResult ListAll()
+        {
+            return View(repo.Products);
+        }
+        public ViewResult List(string category)
+        {
+            return View(repo.Products.Where(x => x.Category == category));
+        }
+        public ViewResult GetById(int ID)
+        {
+            return View(repo.Products.Single(x => x.ID == ID));
+        }
+
     }
 }

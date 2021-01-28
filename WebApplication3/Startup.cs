@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebApplication3.Hubs;
 using WebApplication3.Models;
+using WebApplication3.Models.Hubs;
 
 namespace WebApplication3
 {
@@ -23,6 +25,7 @@ namespace WebApplication3
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+            services.AddSignalR();
             services.AddTransient<IProductRepository, EFProductRepository>();
             services.AddDbContext<AppDbContext>(options =>options.UseSqlServer(Configuration["Data:SportStoreProducts:ConnectionString"]));
             services.AddIdentity<IdentityUser, IdentityRole>()
@@ -52,12 +55,15 @@ namespace WebApplication3
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
+
             app.UseEndpoints(routes =>
             {
-
+                routes.MapHub<ChatHub>("/chathub");
+                routes.MapHub<VisitorCounterHub>("/counter");
                 routes.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Product}/{action=List}/{id?}");
+                
 
                 routes.MapControllerRoute(
                 name: "null",
@@ -75,7 +81,6 @@ namespace WebApplication3
                 controller = "Admin",
                 action = "Index"
                 });
-
             });
             SeedData.EnsurePopulated(app);
         }

@@ -17,7 +17,7 @@ namespace WebApplication3.Models
             IdentityUser user = await userManager.FindByIdAsync(adminUser);
             if (user == null)
             {
-                user = new IdentityUser("Admin");
+                user = new IdentityUser(adminUser);
                 await userManager.CreateAsync(user, adminPassword);
             }
         }
