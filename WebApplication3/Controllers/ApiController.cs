@@ -16,12 +16,6 @@ namespace WebApplication3.Controllers
         {
             this.repo = repo;
         }
-
-        //[HttpGet("GetAll")]
-        //public ActionResult<IEnumerable<Product>> List(string category)
-        //{
-        //    return Ok(repository.Products.Where(p => p.Category == category));
-        //}
         /// <summary>
         /// Get all products
         /// </summary>
@@ -67,7 +61,6 @@ namespace WebApplication3.Controllers
         public ActionResult<Product> AddProduct(Product product)
         {
             repo.SaveProduct(product);
-            CreatedAtAction(nameof(GetById), new { id = product.ID }, product);
             return Ok(product);
         }
         /// <summary>
@@ -87,7 +80,7 @@ namespace WebApplication3.Controllers
                 return NotFound();
             }
             repo.SaveProduct(product);
-            return AcceptedAtAction(nameof(GetById), new { id = product.ID }, product);
+            return NoContent();
         }
 
     }
